@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+
+<head>
+  <title>Jungle Timer</title>
+  <meta name="description" content="TomatoTimer is a flexible and easy to use online Pomodoro Technique Timer">
+  <meta name="keywords"
+    content="pomodoro technique, tomato timer, pomodoro timer, online pomodoro timer, software timer, pomodoro software timer, productivity tools, gtd, getting things done, productivity, digital timer, concentration techniques, pomodoro resources, pomodoro software">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="mask-icon" href="safari-pinned-tab.svg" color="#ff4343">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" href="./assets/foundation.css">
+  <link rel="stylesheet" href="./assets/app.css">
+</head>
+
+<body>
+  <!-- Header and Nav -->
+  <div class="panel">
+    <div class="row">
+      <div class="">
+        <h2>Jungle Pomodoro</h2>
+      </div>
+    </div>
+
+  </div>
+  <!---->
+  </div>
+  <!---->
+  <div class="row">
+    <div class="ten columns centered">
+      <ul class="button-group even three-up" id="timer_selection">
+        <li><button class="button active" disabled="true" id="pomodoro" type="submit" value="Pomodoro">Pomodoro</button>
+        </li>
+        <li><button class="button" disabled="true" id="short_break" type="submit" value="Short Break">Short
+            Break</button></li>
+        <li><button class="button" disabled="true" id="long_break" type="submit" value="Long Break">Long Break</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <br>
+  <!-- Header -->
+  <div class="row">
+    <div class="twelve columns text-center">
+      <div id='default_container'>
+        <h1 id="pTimer"></h1><br />
+      </div>
+    </div>
+    <!-- End Header -->
+    <!-- End Header and Nav -->
+  </div>
+  <br>
+  <br>
+  <div class="row">
+    <div class="six columns centered">
+
+
+    </div>
+  </div>
+
+  <audio src="./assets/alarmwatch.mp3" id="pAudio" hidden="true"></audio>
+
+  <!--<script type='text/javascript' src="notify.js"></script>-->
+  <!--<script type="text/javascript" src="jquery.countdown.js"></script>-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+
+    const HOST = 'http://192.168.0.27';
+
+    const socket = new io.connect(HOST);
+
+    let interval;
+    let audi = document.getElementById("pAudio");
+
+    $(function () {
+      socket.on('chat', (data) => {
+        console.log(data);
+        if (tempoAtual === 1) {
+          musica();
+          $('#pomodoro').attr('disable', false);
+          $('#short_break').attr('disable', false);
+          $('#long_break').attr('disable', false);
+          if ($('#pomodoro').attr('class') === 'button active') {
+            $('#short_break').trigger('click');
+          } else if ($('#short_break').attr('class') === 'button active') {
+            $('#pomodoro').trigger('click');
+          } else {
+            $('#pomodoro').trigger('click');
+          }
+          $('#pomodoro').attr('disable', true);
+          $('#short_break').attr('disable', true);
+          $('#long_break').attr('disable', true);
+        }
+        tempoAtual = Number(data);
+        $('#pTimer').text(transforma_magicamente(tempoAtual));
+      });
+    });
+
+    function musica() {
+      audi.play();
+    }
+
+    let tempo = 45 * 60;
+    let tempoAtual = tempo;
+
+    $(document).ready(() => {
+      $('#pTimer').text('45:00');
+    });
+
+    function transforma_magicamente(s) {
+
+      function duas_casas(numero) {
+        if (numero <= 9) {
+          numero = "0" + numero;
+        }
+        return numero;
+      }
+
+      hora = duas_casas(Math.round(s / 3600));
+      minuto = duas_casas(Math.floor((s % 3600) / 60));
+      segundo = duas_casas((s % 3600) % 60);
+
+      formatado = minuto + ":" + segundo;
+
+      return String(formatado);
+    }
+
+    $('#pomodoro').click(() => {
+      tempo = 2700;
+      tempoAtual = tempo;
+      $('#pTimer').text(transforma_magicamente(tempoAtual));
+      $('#pomodoro').attr('class', 'button active');
+      $('#short_break').attr('class', 'button');
+      $('#long_break').attr('class', 'button');
+    });
+
+    $('#short_break').click(() => {
+      tempo = 10 * 60;
+      tempoAtual = tempo;
+      $('#pTimer').text(transforma_magicamente(tempoAtual));
+      $('#pomodoro').attr('class', 'button');
+      $('#short_break').attr('class', 'button active');
+      $('#long_break').attr('class', 'button');
+    });
+
+    $('#long_break').click(() => {
+      tempo = 15 * 60;
+      tempoAtual = tempo;
+      $('#pTimer').text(transforma_magicamente(tempoAtual));
+      $('#pomodoro').attr('class', 'button');
+      $('#short_break').attr('class', 'button');
+      $('#long_break').attr('class', 'button active');
+    });
+
+  </script>
+</body>
+
+</html>
