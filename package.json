@@ -2,10 +2,10 @@
   "name": "pomodoro",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "./app.js",
   "scripts": {
-    "test": "node app.js",
-    "start": "node app.js"
+    "test": "node ./app.js",
+    "start": "node ./app.js"
   },
   "author": "dayvidcds",
   "license": "ISC",

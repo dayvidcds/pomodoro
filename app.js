@@ -41,7 +41,7 @@ io.on('connection', function(socket){
   });
 });
 
-server.listen(80, (err, res) => {
+server.listen(process.env.PORT || 80, (err, res) => {
   if (err) {
     console.log('SERVER DEU PAUU');
   } else {
