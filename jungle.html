@@ -80,6 +80,7 @@
 
     let interval;
     let audi = document.getElementById("pAudio");
+    let titulo = 'Jungle Pomodoro';
 
     $(function () {
       socket.on('chat', (data) => {
@@ -91,17 +92,22 @@
           $('#long_break').attr('disable', false);
           if ($('#pomodoro').attr('class') === 'button active') {
             $('#short_break').trigger('click');
+            titulo = 'Jungle Short Break';
           } else if ($('#short_break').attr('class') === 'button active') {
             $('#pomodoro').trigger('click');
+            titulo = 'Jungle Pomodoro';
           } else {
             $('#pomodoro').trigger('click');
+            titulo = 'Jungle Pomodoro';
           }
           $('#pomodoro').attr('disable', true);
           $('#short_break').attr('disable', true);
           $('#long_break').attr('disable', true);
         }
+        const time = transforma_magicamente(tempoAtual);
+        document.title = time + ' - ' + titulo;
+        $('#pTimer').text(time);
         tempoAtual = Number(data);
-        $('#pTimer').text(transforma_magicamente(tempoAtual));
       });
     });
 
@@ -114,6 +120,8 @@
 
     $(document).ready(() => {
       $('#pTimer').text('45:00');
+      document.title = titulo;
+      audi.volume = 0.5;
     });
 
     function transforma_magicamente(s) {
