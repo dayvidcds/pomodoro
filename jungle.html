@@ -58,8 +58,10 @@
   <br>
   <div class="row">
     <div class="six columns centered">
-
-
+      <img class="copo" onclick="copo(this)" id="copo1" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
+      <img class="copo" onclick="copo(this)" id="copo2" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
+      <img class="copo" onclick="copo(this)" id="copo3" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
+      <img class="copo" onclick="copo(this)" id="copo4" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
     </div>
   </div>
 
@@ -82,9 +84,19 @@
     let audi = document.getElementById("pAudio");
     let titulo = 'Jungle Pomodoro';
 
+    function copo(elem) {
+      //console.log(elem);
+      if ($(elem).css('opacity') == 1) {
+        $('.copo').css({ opacity: 1 });
+        $(elem).css({ opacity: 0.5 });
+      } else {
+        $(elem).css({ opacity: 1 });
+      }
+    }
+
     $(function () {
       socket.on('chat', (data) => {
-        console.log(data);
+        //console.log(data);
         if (tempoAtual === 1) {
           musica();
           $('#pomodoro').attr('disable', false);
