@@ -16,6 +16,40 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="./assets/foundation.css">
   <link rel="stylesheet" href="./assets/app.css">
+  <style>
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      background-color: #fff;
+      width: 150px;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: true;
+      width: 120px;
+      background-color: #515151;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 1;
+      top: 120%;
+      left: 50%;
+      margin-left: -60px;
+    }
+
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #515151 transparent;
+    }
+  </style>
 </head>
 
 <body>
@@ -48,20 +82,46 @@
   <div class="row">
     <div class="twelve columns text-center">
       <div id='default_container'>
-        <h1 id="pTimer"></h1><br />
+        <h1 id="pTimer">45:00</h1><br />
       </div>
     </div>
-    <!-- End Header -->
-    <!-- End Header and Nav -->
   </div>
   <br>
   <br>
   <div class="row">
-    <div class="six columns centered">
-      <img class="copo" onclick="copo(this)" id="copo1" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
-      <img class="copo" onclick="copo(this)" id="copo2" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
-      <img class="copo" onclick="copo(this)" id="copo3" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
-      <img class="copo" onclick="copo(this)" id="copo4" src="assets/copo-vermelho.png" width="100px" style="cursor: pointer;" />
+    <div style="text-align: center">
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cVerde" src="assets/copo-verde.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uVerde">
+          </ul>
+        </span>
+      </div>
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cAmarelo" src="assets/copo-amarelo.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uAmarelo">
+          </ul>
+        </span>
+      </div>
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cVermelho" src="assets/copo-vermelho.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uVermelho">
+          </ul>
+        </span>
+      </div>
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cPreto" src="assets/copo-preto.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uPreto">
+          </ul>
+        </span>
+      </div>
     </div>
   </div>
 
@@ -83,20 +143,33 @@
     let interval;
     let audi = document.getElementById("pAudio");
     let titulo = 'Jungle Pomodoro';
+    let nome = '';
+    let pCopo = 'cVerde';
 
     function copo(elem) {
-      //console.log(elem);
+      console.log(elem.id);
+      pCopo = elem.id;
       if ($(elem).css('opacity') == 1) {
         $('.copo').css({ opacity: 1 });
         $(elem).css({ opacity: 0.5 });
       } else {
-        $(elem).css({ opacity: 1 });
+        //$(elem).css({ opacity: 1 });
       }
+      $.post('/setCup', {
+        name: nome,
+        cup: pCopo
+      }, (data) => {
+        if (data.status === true) {
+          console.log(data.msg);
+        } else {
+          console.log('Algo deu errado ao tentar enviar o status do copo..');
+        }
+      });
     }
 
     $(function () {
-      socket.on('chat', (data) => {
-        //console.log(data);
+      socket.on('time', (data) => {
+        console.log(data);
         if (tempoAtual === 1) {
           musica();
           $('#pomodoro').attr('disable', false);
@@ -119,7 +192,36 @@
         const time = transforma_magicamente(tempoAtual);
         document.title = time + ' - ' + titulo;
         $('#pTimer').text(time);
-        tempoAtual = Number(data);
+        tempoAtual = Number(data.clock);
+        let g = [], y = [], r = [], b = [];
+        for (let i = 0; i < data.cups.length; i++) {
+          if (data.cups[i].cup === 'cVerde') {
+            //console.log('NAMEEE => ', data.cups[i].name);;
+            g.push(data.cups[i].name);
+          } else if (data.cups[i].cup === 'cAmarelo') {
+            y.push(data.cups[i].name);
+          } else if (data.cups[i].cup === 'cVermelho') {
+            r.push(data.cups[i].name);
+          } else {
+            b.push(data.cups[i].name);
+          }
+          $('#uVerde').html('');
+          $('#uAmarelo').html('');
+          $('#uVermelho').html('');
+          $('#uPreto').html('');
+
+          g.map(e => { $('#uVerde').append($('<li>').append(e)); });
+          y.map(e => { $('#uAmarelo').append($('<li>').append(e)); });
+          r.map(e => { $('#uVermelho').append($('<li>').append(e)); });
+          b.map(e => { $('#uPreto').append($('<li>').append(e)); });
+        }
+        if (data.time === 'pomodoro') {
+          $('#pomodoro').trigger('click');
+        } else if (data.time === 'short_break') {
+          $('#short_break').trigger('click');
+        } else {
+          $('#long_break').trigger('click');
+        }
       });
     });
 
@@ -131,9 +233,15 @@
     let tempoAtual = tempo;
 
     $(document).ready(() => {
-      $('#pTimer').text('45:00');
       document.title = titulo;
       audi.volume = 0.5;
+      let foo = prompt('Digite seu nome para o jungle copo:');
+      if (foo) {
+        nome = foo;
+        $('#cVerde').trigger('click');
+      } else {
+        document.location.reload(true);
+      }
     });
 
     function transforma_magicamente(s) {

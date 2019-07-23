@@ -23,6 +23,8 @@ app.use(cors(corsOptions));
 
 app.use('/assets', express.static(DIR + '/assets'))
 
+let cups = [];
+
 app.get('/', (req, res) => {
   res.sendFile(DIR + '/jungle.html'); 
 });
@@ -31,13 +33,40 @@ app.get('/master', (req, res) => {
   res.sendFile(DIR + '/master.html');
 });
 
+app.post('/setCup', (req, res) => {
+  const name = req.body.name;
+  const cup = req.body.cup;
+  let puloDoGato = false;
+  let i = 0;
+  for (i; i < cups.length; i++) {
+    if (name === cups[i].name) {
+      puloDoGato = true;
+      break;
+    }
+  }
+  if (!puloDoGato) {
+    cups.push({
+      name,
+      cup
+    });
+  } else {
+    cups[i].cup = cup;
+  }
+  console.log(cups);
+  res.status(200).json({
+    status: true,
+    msg: 'Tudo ok'
+  });
+});
+
 io.on('error', () => {
   console.log('Socket ERROR!');
 })
 
-io.on('connection', function(socket){
-  socket.on('chat', function(msg){
-    io.emit('chat', msg);
+io.on('connection', function(socket) {
+  socket.on('time', (msg) => {
+    console.log('TIME => ', msg);
+    io.emit('time', { ...msg, cups });
   });
 });
 

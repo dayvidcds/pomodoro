@@ -86,21 +86,12 @@
 
     const socket = new io.connect(HOST);
 
-    $(function () {
-
-      socket.on('connect', function () {
-
-        socket.emit('subscribe', {
-          topic: 'timer'
-        });
-
-      })
-    });
-
     let tempo = 45 * 60;
     let tempoAtual = tempo;
+    let pTime = 'pomodoro';
 
     $(document).ready(() => {
+      audi.volume = 0.5;
       $('#pTimer').text('45:00');
     });
 
@@ -138,7 +129,10 @@
           }
         }
         $('#pTimer').text(transforma_magicamente(--tempoAtual));
-        socket.emit('chat', tempoAtual);
+        socket.emit('time', {
+          clock: tempoAtual,
+          time: pTime
+        });
       }, 1000);
     }
 
@@ -159,6 +153,7 @@
       $('#pomodoro').attr('class', 'button active');
       $('#short_break').attr('class', 'button');
       $('#long_break').attr('class', 'button');
+      pTime = 'pomodoro';
       pause();
       start();
     });
@@ -170,6 +165,7 @@
       $('#pomodoro').attr('class', 'button');
       $('#short_break').attr('class', 'button active');
       $('#long_break').attr('class', 'button');
+      pTime = 'short_break';
       pause();
       start();
     });
@@ -181,6 +177,7 @@
       $('#pomodoro').attr('class', 'button');
       $('#short_break').attr('class', 'button');
       $('#long_break').attr('class', 'button active');
+      pTime = 'long_break';
       pause();
       start();
     });
