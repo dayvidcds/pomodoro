@@ -189,10 +189,9 @@
           $('#short_break').attr('disable', true);
           $('#long_break').attr('disable', true);
         }
+        tempoAtual = Number(data.clock);
         const time = transforma_magicamente(tempoAtual);
         document.title = time + ' - ' + titulo;
-        $('#pTimer').text(time);
-        tempoAtual = Number(data.clock);
         let g = [], y = [], r = [], b = [];
         for (let i = 0; i < data.cups.length; i++) {
           if (data.cups[i].cup === 'cVerde') {
@@ -222,6 +221,7 @@
         } else {
           $('#long_break').trigger('click');
         }
+        $('#pTimer').text(time);
       });
     });
 
