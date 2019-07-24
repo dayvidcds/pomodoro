@@ -16,6 +16,43 @@
   <meta name="theme-color" content="#ffffff">
   <link rel="stylesheet" href="./assets/foundation.css">
   <link rel="stylesheet" href="./assets/app.css">
+
+  <style>
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      background-color: #fff;
+      width: 180px;
+    }
+
+    .tooltip .tooltiptext {
+      visibility: true;
+      width: 170px;
+      background-color: #515151;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      position: absolute;
+      z-index: 1;
+      top: 120%;
+      left: 50%;
+      margin-left: -90px;
+      margin-bottom: 30px;
+    }
+
+    .tooltip .tooltiptext::after {
+      content: "";
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: transparent transparent #515151 transparent;
+    }
+  </style>
+
 </head>
 
 <body>
@@ -52,10 +89,8 @@
     <!-- End Header and Nav -->
   </div>
   <br>
-  <br>
   <div class="row">
     <div class="six columns centered">
-
       <div class="four columns">
         <button onclick="start()" class="success radius large button" id="timer_start" type="submit"
           value="Start">Start</button>
@@ -70,6 +105,45 @@
       </div>
     </div>
   </div>
+
+  <div class="row" style="margin-top: 50px;">
+    <div style="text-align: center">
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cVerde" src="assets/copo-verde.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uVerde">
+          </ul>
+        </span>
+      </div>
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cAmarelo" src="assets/copo-amarelo.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uAmarelo">
+          </ul>
+        </span>
+      </div>
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cVermelho" src="assets/copo-vermelho.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uVermelho">
+          </ul>
+        </span>
+      </div>
+      <div class="tooltip">
+        <img class="copo" onclick="copo(this)" id="cPreto" src="assets/copo-preto.png" width="70px"
+          style="cursor: pointer;" />
+        <span class="tooltiptext">
+          <ul id="uPreto">
+          </ul>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div style="width: 100%; height: 30px; background-color: #fff;"></div>
 
   <audio src="./assets/alarmwatch.mp3" id="pAudio" hidden="true"></audio>
 
@@ -89,10 +163,41 @@
     let tempo = 45 * 60;
     let tempoAtual = tempo;
     let pTime = 'pomodoro';
+    let titulo = 'Jungle Pomodoro';
+    let nome = '';
+    let pCopo = 'cVerde';
+
+    function copo(elem) {
+      console.log(elem.id);
+      pCopo = elem.id;
+      if ($(elem).css('opacity') == 1) {
+        $('.copo').css({ opacity: 1 });
+        $(elem).css({ opacity: 0.5 });
+      } else {
+        //$(elem).css({ opacity: 1 });
+      }
+      $.post('/setCup', {
+        name: nome,
+        cup: pCopo
+      }, (data) => {
+        if (data.status === true) {
+          console.log('SETCUP => ', data.msg);
+        } else {
+          console.log('Algo deu errado ao tentar enviar o status do copo..');
+        }
+      });
+    }
 
     $(document).ready(() => {
       audi.volume = 0.5;
       $('#pTimer').text('45:00');
+      let foo = prompt('Digite seu nome para o jungle copo:');
+      if (foo) {
+        nome = foo + ' (master)';
+        $('#cVerde').trigger('click');
+      } else {
+        document.location.reload(true);
+      }
     });
 
     function transforma_magicamente(s) {
@@ -115,6 +220,38 @@
 
     let interval;
     let audi = document.getElementById("pAudio");
+
+    $(function () {
+      socket.on('time', (data) => {
+        let g = [], y = [], r = [], b = [];
+        for (let i = 0; i < data.cups.length; i++) {
+          if (data.cups[i].cup === 'cVerde') {
+            console.log('NAMEEE => ', data.cups[i].name);;
+            g.push(data.cups[i].name);
+          } else if (data.cups[i].cup === 'cAmarelo') {
+            y.push(data.cups[i].name);
+          } else if (data.cups[i].cup === 'cVermelho') {
+            r.push(data.cups[i].name);
+          } else {
+            b.push(data.cups[i].name);
+          }
+          $('#uVerde').html('');
+          $('#uAmarelo').html('');
+          $('#uVermelho').html('');
+          $('#uPreto').html('');
+
+          g.map(e => { $('#uVerde').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+          y.map(e => { $('#uAmarelo').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+          r.map(e => { $('#uVermelho').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+          b.map(e => { $('#uPreto').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+
+        }
+      });
+    });
+
+    function nomes(param) {
+      alert(param.text);
+    }
 
     function start() {
       interval = setInterval(() => {
