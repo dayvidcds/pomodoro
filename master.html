@@ -189,7 +189,7 @@
     }
 
     $(document).ready(() => {
-      audi.volume = 0.5;
+      audi.volume = 0.3;
       $('#pTimer').text('45:00');
       let foo = prompt('Digite seu nome para o jungle copo:');
       if (foo) {
@@ -240,10 +240,10 @@
           $('#uVermelho').html('');
           $('#uPreto').html('');
 
-          g.map(e => { $('#uVerde').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
-          y.map(e => { $('#uAmarelo').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
-          r.map(e => { $('#uVermelho').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
-          b.map(e => { $('#uPreto').html(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+          g.map(e => { $('#uVerde').append(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+          y.map(e => { $('#uAmarelo').append(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+          r.map(e => { $('#uVermelho').append(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
+          b.map(e => { $('#uPreto').append(`<li><a style="cursor: pointer; color: #fff;" onclick="nomes(this)">${e}</a></li>`) });
 
         }
       });

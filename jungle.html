@@ -234,7 +234,7 @@
 
     $(document).ready(() => {
       document.title = titulo;
-      audi.volume = 0.5;
+      audi.volume = 0.3;
       let foo = prompt('Digite seu nome para o jungle copo:');
       if (foo) {
         nome = foo;
@@ -288,6 +288,18 @@
       $('#short_break').attr('class', 'button');
       $('#long_break').attr('class', 'button active');
     });
+
+    window.onbeforeunload = function () {
+      $.post('/logout', {
+        name: nome
+      }, (data) => {
+        if (data.status === true) {
+          return "Hey " + nome + ", Tony está de olho em vc! hmmm";    
+        } else {
+          return "Gostaria mesmo de sair desta página?";rs
+        }
+      });
+    };
 
   </script>
 </body>

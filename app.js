@@ -25,12 +25,81 @@ app.use('/assets', express.static(DIR + '/assets'))
 
 let cups = [];
 
+const povo = [
+  {
+    email: 'dayvid.blender@gmail.com',
+    nome: 'Dayvid'
+  },
+  {
+    email: 'khenysson@hotmail.com',
+    nome: 'Khenysson'
+  },
+  {
+    email: 'gabriel2germano12@gmail.com',
+    nome: 'Gabriel'
+  },
+  {
+    email: 'ribeiro@gmail.com',
+    nome: 'Ribeiro'
+  },
+  {
+    email: 'nbaleonardo@gmail.com',
+    nome: 'Leon'
+  }
+];
+
 app.get('/', (req, res) => {
-  res.sendFile(DIR + '/jungle.html'); 
+  res.sendFile(DIR + '/jungle.html');
 });
 
 app.get('/master', (req, res) => {
   res.sendFile(DIR + '/master.html');
+});
+
+app.post('/logout', (req, res) => {
+  const name = req.body.name;
+  let puloDoGato = false;
+  let i = 0;
+  console.log('SAINDOOOOOOOOOOOOO');
+  for (i; i < cups.length; i++) {
+    if (name === cups[i].name) {
+      puloDoGato = true;
+      break;
+    }
+  }
+  if (!puloDoGato) {
+    res.status(404).json({
+      status: false,
+      msg: 'Jungle não encontrado'
+    });
+  } else {
+    cups.splice(i, 1);
+    res.status(200).json({
+      status: true,
+      msg: 'Tudo ok'
+    });
+  }
+});
+
+app.post('/login', (req, res) => {
+  const email = req.body.email;
+  let puloDoGato = false;
+  for (let i = 0; i < povo.length; i++) {
+    if (povo[i].email === email) {
+      puloDoGato = true;
+      break;
+    } else {
+      puloDoGato = false;
+    }
+  }
+  if (puloDoGato) {
+    res.status(200).json({
+      status: true,
+      msg: 'Tudo ok'
+    });
+  } else {
+    res.redirect('/');
+  }
 });
 
 app.post('/setCup', (req, res) => {
@@ -63,7 +132,7 @@ io.on('error', () => {
   console.log('Socket ERROR!');
 })
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
   socket.on('time', (msg) => {
     console.log('TIME => ', msg);
     io.emit('time', { ...msg, cups });
