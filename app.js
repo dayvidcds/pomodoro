@@ -48,11 +48,11 @@ const povo = [
   }
 ];
 
-app.get('/', (req, res) => {
+app.get('/pomodoro', (req, res) => {
   res.sendFile(DIR + '/jungle.html');
 });
 
-app.get('/master', (req, res) => {
+app.get('/pomodoro/master', (req, res) => {
   res.sendFile(DIR + '/master.html');
 });
 
