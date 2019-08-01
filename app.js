@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
 app.use('/assets', express.static(DIR + '/assets'))
+app.use('/pomodoro/assets', express.static(DIR + '/assets'))
 
 let cups = [];
 
