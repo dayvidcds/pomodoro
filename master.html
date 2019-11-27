@@ -160,7 +160,7 @@
 
     const socket = new io.connect(HOST);
 
-    let tempo = 45 * 60;
+    let tempo = 60 * 60;
     let tempoAtual = tempo;
     let pTime = 'pomodoro';
     let titulo = 'Jungle Pomodoro';
@@ -190,7 +190,7 @@
 
     $(document).ready(() => {
       audi.volume = 0.3;
-      $('#pTimer').text('45:00');
+      $('#pTimer').text('60:00');
       let foo = prompt('Digite seu nome para o jungle copo:');
       if (foo) {
         nome = foo + ' (master)';
@@ -284,7 +284,7 @@
     }
 
     $('#pomodoro').click(() => {
-      tempo = 2700;
+      tempo = 60*60;
       tempoAtual = tempo;
       $('#pTimer').text(transforma_magicamente(tempoAtual));
       $('#pomodoro').attr('class', 'button active');
