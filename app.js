@@ -57,6 +57,14 @@ app.get('/pomodoro', (req, res) => {
   res.sendFile(DIR + '/jungle.html');
 });
 
+app.get('/login', (req, res) => {
+  res.sendFile(DIR + '/login.html');
+});
+
+app.get('/profile', (req, res) => {
+  res.sendFile(DIR + '/profile.html');
+});
+
 app.get('/pomodoro/master', (req, res) => {
   res.sendFile(DIR + '/master.html');
 });
