@@ -28,25 +28,17 @@ let cups = [];
 
 const povo = [
   {
-    email: 'dayvid.blender@gmail.com',
+    email: 'dayvid@navitdigital.com.br',
     nome: 'Dayvid'
   },
   {
-    email: 'khenysson@hotmail.com',
-    nome: 'Khenysson'
+    email: 'wedson@navitdigital.com.br',
+    nome: 'Wedson'
   },
   {
-    email: 'gabriel2germano12@gmail.com',
-    nome: 'Gabriel'
+    email: 'cleber@navitdigital.com.br',
+    nome: 'Cleber'
   },
-  {
-    email: 'ribeiro@gmail.com',
-    nome: 'Ribeiro'
-  },
-  {
-    email: 'nbaleonardo@gmail.com',
-    nome: 'Leon'
-  }
 ];
 
 app.get('/', (req, res) => {
