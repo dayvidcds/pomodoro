@@ -58,7 +58,7 @@
   <div class="panel">
     <div class="row">
       <div class="">
-        <h2>Jungle Pomodoro</h2>
+        <h2>Navit Pomodoro</h2>
       </div>
     </div>
   </div>
@@ -136,13 +136,13 @@
 
   <script type="text/javascript">
 
-    const HOST = 'https://junglestyle.herokuapp.com/'; //'192.168.0.126'//'https://jungle-pomodoro.herokuapp.com/';
+    const HOST = 'https://navit-pomodoro.herokuapp.com/pomodoro/'; //'192.168.0.126'//'https://jungle-pomodoro.herokuapp.com/';
 
     const socket = new io.connect(HOST);
 
     let interval;
     let audi = document.getElementById("pAudio");
-    let titulo = 'Jungle Pomodoro';
+    let titulo = 'Navit Pomodoro';
     let nome = '';
     let pCopo = 'cVerde';
 
@@ -180,10 +180,10 @@
             titulo = 'Jungle Short Break';
           } else if ($('#short_break').attr('class') === 'button active') {
             $('#pomodoro').trigger('click');
-            titulo = 'Jungle Pomodoro';
+            titulo = 'Navit Pomodoro';
           } else {
             $('#pomodoro').trigger('click');
-            titulo = 'Jungle Pomodoro';
+            titulo = 'Navit Pomodoro';
           }
           $('#pomodoro').attr('disable', true);
           $('#short_break').attr('disable', true);
